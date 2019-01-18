@@ -1,0 +1,37 @@
+---
+title: "dummy_push_SBUCD"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r echo=TRUE}
+getwd()
+```
+
+```{r}
+sessionInfo()
+```
+
+```{r}
+library(nycflights13)
+library(tidyverse)
+```
+
+```{r}
+flights
+```
+
+```{r echo=TRUE}
+flights %>% 
+  filter(origin=="JFK" & dest=="SFO")
+```
+
+```{r}
+flights %>% 
+  filter(origin=="JFK" & dest=="SFO") %>% 
+  ggplot(aes(x=carrier))+
+  geom_bar()
+```

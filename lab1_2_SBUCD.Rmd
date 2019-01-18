@@ -1,0 +1,41 @@
+---
+title: "lab1_2_SBUCD"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## To create a new vector
+```{r}
+my_vector <- c(10, 20, 30)
+my_vector
+```
+
+```{r}
+my_dates <- c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday")
+my_dates
+```
+
+## Vectors can only hold data of one type
+
+## Vector of scientists
+```{r}
+scientists <- c("Einstein", "physicist", "Male", "Darwin", "biologist", "Male", "Faraday", "physicist", "Male", "Curie", "chemist", "Female")
+scientists
+```
+
+## Name each element of vector
+```{r}
+names(scientists) <- c("Name", "Profession", "Sex", "Name", "Profession", "Sex", "Name", "Profession", "Sex", "Name", "Profession", "Sex")
+scientists
+```
+
+## Vectors are strings of the same data type
+
+## Separate the sexes of the scientists. Notice that because this is a vector, we have to specify the position of each element. In order to do this, we use `[]`.
+```{r}
+scientists_sex <- scientists[c(3, 6, 9, 12)]
+scientists_sex
+```
