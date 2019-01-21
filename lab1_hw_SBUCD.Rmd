@@ -1,0 +1,70 @@
+---
+title: "lab1_hw_SBUCD"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+5 - 3 * 2
+8 / 2 ** 2
+```
+## These results did not surprise me. However, it is interesting to note that r already has an order of operations.
+
+```{r}
+(5 - 3) * 2
+(8 / 2) ** 2
+```
+```{r}
+blackjack <- c(140, -20, 70, -120, 240)
+roulette <- c(60, 50, 120, -300, 10)
+```
+
+```{r}
+days <- c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday")
+```
+
+```{r}
+names(blackjack) <- days
+names(roulette) <- days
+```
+
+```{r}
+total_blackjack <- sum(blackjack)
+total_blackjack
+```
+
+```{r}
+total_roulette <- sum(roulette)
+total_roulette
+```
+
+```{r}
+sum(blackjack[1] + roulette[1])
+sum(blackjack[2] + roulette[2])
+sum(blackjack[3] + roulette[3])
+sum(blackjack[4] + roulette[4])
+sum(blackjack[5] + roulette[5])
+```
+
+```{r}
+daily_total <- c(200, 30, 190, -420, 250)
+```
+
+```{r}
+total_week <- cbind(blackjack, roulette, daily_total)
+total_week
+```
+## Thursday seems unlucky
+
+```{r}
+if (total_blackjack > total_roulette) {
+  print ("stick to blackjack")  
+}
+if (total_roulette > total_blackjack)
+  {
+  print ("stick to roulette")
+}
+```

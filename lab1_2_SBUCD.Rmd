@@ -39,3 +39,24 @@ scientists
 scientists_sex <- scientists[c(3, 6, 9, 12)]
 scientists_sex
 ```
+
+## Practice
+
+```{r}
+new_vector <- 1:25
+new_vector[new_vector == 10]
+```
+```{r}
+new_vector == 15
+```
+
+```{r}
+new_vector < 10
+```
+
+```{r}
+new_vector > 10
+```
+```{r}
+new_vector[new_vector < 10 & new_vector > 2]
+```
