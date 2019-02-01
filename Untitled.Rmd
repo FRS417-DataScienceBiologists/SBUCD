@@ -1,0 +1,32 @@
+---
+title: "Lab 1_1"
+output: html_document
+---
+
+## Download and install the tidyverse
+This is where Ledford told us to install the tidyverse.
+```{r}
+install.packages("tidyverse")
+```
+## Set working directory
+Always make sure that you are in the correct directory before you start.
+```{r}
+getwd()
+```
+## Download example dataset
+```{r}
+install.packages("nycflights13")
+```
+## Load the dataset and tidyverse libraries
+```{r}
+library(nycflights13)
+library(tidyverse)
+```
+```{r}
+flights
+```
+```{r}
+filter(flights, month==1, day==11)
+```
+
+

@@ -1,0 +1,177 @@
+---
+title: "Lab2_2_rev_SBUCD"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+getwd()
+```
+
+```{r}
+fish <- readr::read_csv("~/Desktop/class_files-master/Gaeta_etal_CLC_data.csv")
+```
+
+#Load the Tidyverse
+```{r}
+library("tidyverse")
+```
+
+# Summmary Functions
+##### choose the suite of summary functions you like the most and find the most helpful
+```{r}
+names(fish)
+```
+
+```{r}
+head(fish)
+```
+
+```{r}
+summary(fish)
+```
+
+```{r}
+glimpse(fish)
+```
+
+```{r}
+str(fish)
+```
+
+# Practice
+##### 1. Load the data `mammal_lifehistories_v2.csv` and place it into a new object called `mammals`.
+
+```{r}
+mammals <- readr::read_csv("~/Desktop/class_files-master/mammal_lifehistories_v2.csv")
+```
+
+##### 2. Provide the dimensions of the data frame.
+
+```{r}
+dim(fish)
+```
+
+##### 3. Display the column names in the data frame. 
+
+```{r}
+names(fish)
+```
+
+##### 4. Use str() to show the structure of the data frame and its individual columns; compare this to glimpse(). 
+
+```{r}
+str(fish)
+```
+
+```{r}
+glimpse(fish)
+```
+
+
+##### 5. Print out the first few rows of the data using the function head(). 
+
+```{r}
+head(fish)
+```
+
+# Filter
+##### dplyr is part of the tidyverse
+##### prof uses it almost everyday
+##### first command to learn is filter
+##### filter looks through dataframe and pulls out rows that fit criteria that you specify
+
+```{r}
+names(fish)
+```
+
+```{r}
+filter(fish, lakeid=="AL")
+```
+
+##### can filter work for columns as well as rows?
+```{r}
+filter(fish, length>350)
+```
+
+```{r}
+filter(fish, length==167 & length==175)
+```
+##### there are no fish that have both length 167 and length 175
+##### want to use "or", instead of "and"
+```{r}
+filter(fish, length==167 | length==175)
+```
+
+##### "!" means "not"
+##### so we are essentially saying, "filter fish for the lengths that are not 175"
+```{r}
+filter(fish, !length==175)
+```
+
+# Practice
+##### 1. Filter the `fish` data to include the samples from lake `DY`.
+
+```{r}
+filter(fish, lakeid=="DY")
+```
+
+##### 2. Filter the data to include all lakes except AL.
+
+```{r}
+filter(fish, !lakeid=="AL")
+```
+
+##### 3. Filter the data to include all lakes except AL and DY.
+
+```{r}
+filter(fish, !lakeid=="AL" & !lakeid=="DY")
+```
+
+##### 4. Filter the data to include all fish with a scale length greater than or equal to 11.
+
+```{r}
+filter(fish, length>=11)
+```
+
+##### 5. Filter the data to include fish only from lake AL and with a scalelength greater than or equal to 2 and less than or equal to 4.
+
+```{r}
+filter(fish, lakeid=="AL", scalelength>=2 & scalelength<=4)
+```
+
+# Pipes
+##### pipes make code cleaner
+##### this essentially says, "take fish and pipe it to the function filter"
+```{r}
+fish %>% 
+  filter(lakeid=="AL")
+```
+
+##### use select( )
+##### if you don't really need to do anything with the data????
+```{r}
+fish %>%
+  select(lakeid, scalelength)
+```
+
+##### can combine select with filter through the pipe
+```{r}
+fish %>%
+  select(lakeid, scalelength) %>%
+  filter(lakeid=="AL",
+         scalelength>=2 & scalelength<=4)
+```
+
+##### to make it a dataframe, just have to assign it to new object
+```{r}
+fish_new <- fish %>%
+  select(lakeid, scalelength) %>%
+  filter(lakeid=="AL",
+         scalelength>=2 & scalelength<=4)
+```
+
+### pipe -> select -> filter

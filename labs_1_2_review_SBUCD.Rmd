@@ -1,0 +1,121 @@
+---
+title: "labs_1_2_review_SBUCD"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Arithmetic
+### R is a calculator
+```{r}
+4^3
+```
+
+# Objects
+### Objects can store data of multiple classes
+```{r}
+my_age <- 19
+```
+```{r}
+my_age + 1
+```
+
+# Data Classes
+### R works with multiple classes of data including integer, numeric, and character
+```{r}
+integer <- 3L
+numeric <- 27.4
+character <- "hello"
+```
+### Use the class( ) function to find out the class of an object
+```{r}
+class(integer)
+class(numeric)
+class(character)
+```
+### Logical tests of class type can also be performed
+```{r}
+is.integer(numeric())
+```
+
+# Vectors
+### Vectors contain data of the same class
+```{r}
+happy_vector <- c(5, 10, 16, 17, 30)
+happy_vector
+```
+```{r}
+class(happy_vector)
+```
+### If there are different classes, R changes the content of the vector into what it thinks is the best class
+```{r}
+unhappy_vector <- c(5, 10, 16, "big", "small")
+unhappy_vector
+```
+```{r}
+class(unhappy_vector)
+```
+
+### Vectors may contain data of many different class types
+```{r}
+options(scipen=999) #disables scientific notation
+organism<-c("Human","Mouse","Fruit Fly", "Roundworm","Yeast")
+genomeSizeBP<-c(3000000000,3000000000,135600000,97000000,12100000)
+estGeneCount<-c(30000,30000,13061,19099,6034)
+```
+### Combine them into a single vector
+```{r}
+genome_size <- c(genomeSizeBP, estGeneCount)
+genome_size
+```
+### Provide names
+```{r}
+names(genome_size) <- c("genome size BP", "genome size BP", "genome size BP", "genome size BP", "genome size BP", "gene count", "gene count", "gene count", "gene count", "gene count")
+genome_size
+```
+### You can select elements of a vector using `[]`
+```{r}
+humans <- genome_size[c(1, 6)]
+humans
+```
+
+# Data Matrices
+### Data matrices are slightly more efficient than vectors
+```{r}
+genome_matrix <- matrix(genome_size, nrow=2, byrow=T)
+genome_matrix
+```
+### Name the columns and rows
+```{r}
+colnames(genome_matrix) <- organism
+rownames(genome_matrix) <- c("genome size BP", "gene count")
+genome_matrix
+```
+### Can use functions to make a calculation
+```{r}
+means <- rowMeans(genome_matrix)
+```
+### Add them to the matrix
+```{r}
+genome_matrix2 <- cbind(genome_matrix, means)
+genome_matrix2
+```
+
+# Data Frames
+### Data frames are like data matrices except every column is a vector
+```{r}
+genome_frame <- data.frame(organism=organism, genomeSizeBP=genomeSizeBP, estGeneCount=estGeneCount)
+genome_frame
+```
+
+# Summary
+### R works in vectors
+### you can organisze those vectors in a data matrix
+### but it is most efficient to use a data frame
+### because we are working with multiple classes of data
+
+###### need to make sure there are same number of names as there are values
+
+#Next: tidyverse suite of packages

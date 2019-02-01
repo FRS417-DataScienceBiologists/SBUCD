@@ -1,0 +1,88 @@
+---
+title: "Lab 1_2"
+output: html_document
+---
+
+```{r}
+getwd()
+```
+
+## Check to make sure you are up to date with current version of R and R Studio.
+## Use option + command + i to add new chunk.
+```{r}
+R.Version()
+```
+
+## Check the current version of the specified package.
+```{r}
+packageVersion("tidyverse")
+```
+
+## Provides overview of the session.
+```{r}
+sessionInfo()
+```
+
+## Use "?" to pull up a help document.
+```{r}
+?mean
+```
+
+## R can be used as a calculator.
+```{r}
+2*3
+```
+
+## R can perform functions.
+```{r}
+mean(2, 3, 4, 5)
+```
+
+```{r}
+cos(30)
+```
+
+## R's strength lies in objects.
+```{r}
+x <- 20
+```
+
+```{r}
+print(x)
+```
+
+```{r}
+x*2
+```
+
+```{r}
+treatment<-36
+control<-38
+
+my_experiment<-treatment+control
+
+my_experiment
+```
+
+```{r}
+my_experiment*2
+```
+
+## Create different objects.
+```{r}
+my_numeric <- 42
+my_integer <- 2L
+my_character <- "universe"
+my_logical <- FALSE
+my_complex <- 2+4i
+```
+
+## Find out the class of different objects.
+```{r}
+class(my_numeric)
+class(my_integer)
+class(my_character)
+class(my_logical)
+class(my_complex)
+```
+
