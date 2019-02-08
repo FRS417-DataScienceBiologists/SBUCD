@@ -1,0 +1,113 @@
+---
+title: "lab3_1_rev_SBUCD"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# load tidyverse
+```{r}
+library(tidyverse)
+```
+
+# review
+### read the csv
+```{r}
+fish <- readr::read_csv("/Users/sophieborison/Desktop/class_files-master/Gaeta_etal_CLC_data.csv")
+```
+
+### filter
+```{r}
+glimpse(fish)
+```
+```{r}
+names(fish)
+```
+
+```{r}
+fish %>%
+  filter(lakeid=="AL",
+         length==167)
+```
+
+##### might be distracting to have all those columns
+##### so use function select( ) to only show certain columns
+```{r}
+fish %>%
+  select(fish_id, lakeid, scalelength)
+```
+### can use contains( ) function instead
+### comes in handy if you have a data frame with lots of columns
+```{r}
+fish %>%
+  select(contains("length"))
+```
+
+### can use ends_with( ) function as well
+```{r}
+fish %>%
+  select(ends_with("mm"))
+```
+
+
+### oftentimes, we think that because we have no errors, everything is working
+### couldve worked for the wrong reasons and not done what you thought it did
+
+# Practice
+###1. Build a dataframe focused on the lakes `AL` and `AR` and looking at radii length between 2 and 4 only. Use pipes!
+
+```{r}
+fish %>%
+  filter(lakeid=="AL" | lakeid=="AR") %>%
+  filter(radii_length_mm>=2 & radii_length_mm<=4)
+```
+
+### Arrange allows us to sort values in a column
+```{r}
+fish %>%
+  arrange(desc(scalelength))
+```
+
+### Count the number of observations in ___
+```{r}
+fish %>%
+  count(lakeid)
+```
+
+### mutate( ) allows use to create new columns in a data frame
+```{r}
+new_fish <- fish %>%
+  select(lakeid, fish_id, scalelength, length) %>%
+  filter(lakeid=="AL") %>%
+  arrange(fish_id) %>%
+  mutate(scale_ratio=(length/scalelength))
+```
+
+```{r}
+names(new_fish)
+```
+
+# Practice
+### 1. Build a dataframe focused on the scalelengths of `fish_id` 300 and 301. Use `arrange()` to sort from smallest to largest scalelength. Use pipes!
+
+```{r}
+fish %>%
+  select(fish_id, scalelength) %>%
+  filter(fish_id==300 | fish_id==301) %>%
+  arrange(scalelength)
+```
+
+### 2. Add a new column to the fish data that is radii_length_mm divided by scalelength. Add another column that scales this number to a percentage
+```{r}
+new_new_fish <- fish %>%
+  mutate(radii_scale=(100*(radii_length_mm/scalelength)))
+```
+
+```{r}
+print(new_new_fish)
+```
+
+# can select, filter, and mutate a dataframe
+# r makes things reproducable, which is important as data gets bigger and messier

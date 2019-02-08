@@ -1,0 +1,115 @@
+---
+title: "lab3_2_SBUCD"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Tidy means something specific in R
+### every variable is in its own column
+### overy obseration is in its own row
+### and every value has its own cell
+
+##### most common problem is that names of columns are variables themselves
+##### creates problems for R
+##### because R thinks in vectors
+
+##### in each row there are multiple observations per patient
+##### the columns names are drug treatments, a variable, not a names
+##### the name of the column should be "drug" instead
+```{r}
+non_tidy1 <- data.frame(
+  patient= c("Margaret", "Frank", "Hawkeye", "Trapper", "Radar", "Henry"),
+  a= c(72, 84, 64, 60, 74, 88),
+  b= c(74, 84, 66, 58, 72, 87),
+  c= c(80, 88, 68, 64, 78, 88),
+  d= c(68, 76, 64, 58, 70, 72)
+)
+```
+
+```{r}
+plot(non_tidy1)
+```
+
+```{r}
+non_tidy1 %>%
+  gather(a, b, c, d, key="drug", value="heartrate")
+```
+##### gather takes the data frame
+##### key is name of new column
+##### assemble into key value pairs
+##### take abcd, take it from each patient, and map each heartrate accordingly
+```{r}
+plot(tidy1$patient, tidy1$heartrate)
+```
+
+#Practice
+###The data below track tuberculosis infection rates by year and country.
+```{r}
+country <- c("Afghanistan", "Brazil", "China")
+`1999` <- c(745, 37737, 212258)
+`2000` <- c(2666, 80488, 213766)
+tb_data <- data.frame(country=country, `1999`=`1999`, `2000`=`2000`)
+tb_data
+```
+
+### 1. Are these data tidy? Why not? Identify the specific problem(s).
+##### These data are not tidy because the name of the columns are variables.
+
+### 2. Use gather() to tidy the data.
+```{r}
+tb_data %>%
+  gather(`X1999`, `X2000`, key="year", value="infection_rate")
+```
+
+# seperate( )
+### not tidy because ___(patient?) includes two observations
+```{r}
+non_tidy2 <- data.frame(
+  patient= c("Margaret_f", "Frank_m", "Hawkeye_m", "Trapper_m", "Radar_m", "Henry_m"),
+  a= c(72, 84, 64, 60, 74, 88),
+  b= c(74, 84, 66, 58, 72, 87),
+  c= c(80, 88, 68, 64, 78, 88),
+  d= c(68, 76, 64, 58, 70, 72)
+)
+```
+
+### tell it what column I want to seperate
+### and then still need to tidy column names
+```{r}
+tidy2 <- non_tidy2 %>%
+  separate(patient, into=c("patient_nm", "sex"), sep="_") %>%
+  gather(a, b, c, d, key="drug", value="heartrate")
+```
+
+# rename
+```{r}
+tidy2 %>%
+  dplyr::rename(
+    MASH_character = patient_nm, 
+    Sex = sex,
+    Drug = drug,
+    heartrate_bpm = heartrate
+  )
+```
+
+# Practice
+In this example study, ten participants were asked to categorize three face styles by clicking various buttons that represent three different categories (face 1, face 2, face 3). The time it took to click a button is in milliseconds.
+```{r}
+faces <- data.frame(
+  ParticipantID_sex = c("001_m", "002_f", "003_f", "004_f", "005_m", "006_f", "007_m", "008_m", "009_m", "010_f"),
+  Face_1 = c(411,723,325,456,579,612,709,513,527,379),
+  Face_2 = c(123,300,400,500,600,654,789,906,413,567),
+  Face_3 = c(1457,1000,569,896,956,2345,780,599,1023,678)
+)
+faces
+```
+
+### 1. Are these data tidy? Why or why not?  
+
+### 2. Tidy the data and place them into a new dataframe.
+
+### 3. Use `rename()` to rename a few col
+
