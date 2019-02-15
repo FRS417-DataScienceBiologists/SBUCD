@@ -1,0 +1,58 @@
+---
+title: "lab4_2_rev_SBUCD"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### NA's one of the big plights of data analysis
+### in any field, in any science, there wil always be NA values
+### even more common in big data sets
+### how are those NA's represented? what did you mean by having that NA there?
+
+### could have r summarize te number of NAs
+### only things that R recognizes as NAs, but may not actually represent the number of NAs in the dataset
+### doesnt tell you where NAs R
+
+## Load the tidyverse
+```{r}
+library("tidyverse")
+```
+
+### `purrr` takes a command and repeats it across for you
+### went through and told me where all my NAs were in the dataframe
+```{r}
+msleep_na <- 
+  msleep %>%
+  purrr::map_df(~ sum(is.na(.))) #map to a new data frame the sum results of the is.na function for all columns
+msleep_na
+```
+
+### use gather to make it easier to read
+```{r}
+msleep %>% 
+  purrr::map_df(~ sum(is.na(.))) %>% 
+  tidyr::gather(key="variables", value="num_nas") %>% 
+  arrange(desc(num_nas))
+```
+
+### count will also give you number of NAs in given column
+```{r}
+msleep %>% 
+  count(conservation)
+```
+
+### can replace other notations of missing data with "NA"
+Once you have an idea of how NA's are represented in the data, you can replace them with `NA` so that R can better deal with them. The bit of code below is very handy, especially if the data has NA's represented as **actual values that you want replaced** or if you want to make sure any blanks are treated as NA.
+```{r}
+msleep_na2 <- 
+  msleep %>% 
+  na_if("") #replace x data with NA
+msleep_na2
+```
+
+# Practice
+### 1. Did replacing blanks with NA have any effect on the msleep data? Demonstrate this using some code.
+

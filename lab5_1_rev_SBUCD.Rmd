@@ -1,0 +1,191 @@
+---
+title: "Lab5_1_rev_SBUCD"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+library(skimr)
+```
+
+# Grammar of Graphics
+### Plots built in layers
+
+### Make plots visibly appealing, but not too confusing
+### discrete data vs. continuous data vs. categorical data
+### plot you makes depends on what kind of data you have in your data set
+
+### What is our data set?
+```{r}
+iris <- iris
+```
+
+### data is iris, mapping is aesthetic
+### set y axis and x axis
+### specifying axis is specifying a column
+## geom is box plot??
+
+```{r}
+ggplot(data=iris, mapping=aes(x=Species, y=Petal.Length))+
+  geom_boxplot()
+```
+
+# Practice
+### 1. Take a moment to practice. Use the iris data to build a scatterplot that compares sepal length vs. sepal width. Use the cheatsheet to find the correct `geom_` for a scatterplot.
+
+```{r}
+ggplot(data=iris, mapping=aes(x=Sepal.Length, y=Sepal.Width))+
+  geom_point()
+```
+
+### Load the data
+```{r}
+homerange <- readr::read_csv("/Users/sophieborison/Desktop/class_files-master/Tamburelloetal_HomeRangeDatabase.csv")
+```
+
+```{r}
+homerange <- 
+  homerange %>%  
+  select(common.name, taxon, family, genus, species, mean.mass.g, log10.mass, mean.hra.m2, log10.hra, preymass, log10.preymass, trophic.guild)
+```
+
+```{r}
+names(homerange)
+```
+
+### Is there a correlation between organism size and the size of its habitat?
+### geom jitter helps with noise
+### can add regression lign
+```{r}
+ggplot(data=homerange, mapping=aes(x=log10.mass, y=log10.hra)) +
+  geom_point() +
+  geom_smooth(method=lm, se=FALSE)
+```
+
+### R already knows mapping
+### Our data already implies y-axis, it is number of observations
+### Can't specify y for a geom bar, it is just count
+### Especially helpful if you want to make counts of catergories
+```{r}
+homerange %>%
+  ggplot(aes(x=trophic.guild)) +
+  geom_bar(stat="count")
+```
+
+```{r}
+carni_mammals <- 
+  homerange %>% 
+  filter(taxon=="mammals", 
+         trophic.guild=="carnivore") %>% 
+  group_by(family) %>% 
+  summarize(count=n(),
+            mean_body_wt=mean(log10.mass)) %>% 
+  arrange(desc(mean_body_wt))
+carni_mammals
+```
+
+### mean bodyweight by ___ of carnivorous mammals
+### need to tell it not to do counts, there is nothing to count
+```{r}
+carni_mammals%>% 
+  ggplot(aes(x=family, y=mean_body_wt))+
+  geom_bar(stat="identity")
+```
+
+### theme controls text aspects, etc.
+### angle controls text angle
+### hjust sets text spacing
+### one of those axes needs to be a categorical variable
+# I'm confused what's going on, what does theme, angle, etc. do?
+```{r}
+carni_mammals%>% 
+  ggplot(aes(x=family, y=mean_body_wt))+
+  geom_bar(stat="identity")+
+  theme(axis.text.x = element_text(angle = 60, hjust=1))
+```
+
+### reorder makes it descending
+### coord_flip does ___
+```{r}
+carni_mammals%>% 
+  ggplot(aes(x=reorder(family, -mean_body_wt), y=mean_body_wt))+
+  geom_bar(stat="identity")+
+  coord_flip()
+```
+
+# Practice
+
+### Filter the `homerange` data to include `mammals` only.
+```{r}
+mammals <- 
+  homerange %>% 
+  filter(taxon=="mammals") %>% 
+  select(common.name, family, genus, species, trophic.guild, mean.mass.g, log10.mass, mean.hra.m2, log10.hra, preymass, log10.preymass)
+```
+
+```{r}
+mammals
+```
+
+### 1. Are there more herbivores or carnivores in mammals? Make a bar plot that shows their relative proportions.
+
+# Identity vs. count?? I'm confused.
+```{r}
+mammals %>% 
+  ggplot(aes(x=trophic.guild))+
+  geom_bar(stat="count")+
+  theme(axis.text.x = element_text(angle = 60, hjust=1))
+```
+
+
+### 2. Is there a positive or negative relationship between mass and homerange? How does this compare between herbivores and carnivores? Make two plots that illustrate these eamples below.  
+
+```{r}
+mammals %>%
+  filter(trophic.guild=="herbivore") %>%
+  ggplot(mapping=aes(x=log10.mass, y=log10.hra)) +
+  geom_point() +
+  geom_smooth(method=lm, se=FALSE)
+```
+
+```{r}
+mammals %>%
+  filter(trophic.guild=="carnivore") %>%
+  ggplot(mapping=aes(x=log10.mass, y=log10.hra)) +
+  geom_point() +
+  geom_smooth(method=lm, se=FALSE)
+```
+
+### 3. Make a barplot that shows the masses of the top 10 smallest mammals in terms of mass. Be sure to use `stat'="identity"`.
+
+```{r}
+mammals %>% 
+  top_n(-10, log10.mass) %>% 
+  ggplot(aes(x=common.name, y=log10.mass))+
+  geom_bar(stat="identity")+
+  coord_flip()
+```
+
+### skip 8,9,10 on homework
+
+### can store plots as objects and layer them
+```{r}
+qqq <- mammals %>%
+  filter(trophic.guild=="herbivore")
+```
+
+```{r}
+p1 <- ggplot(data=mammals, mapping=aes(x=log10.mass, y=log10.hra))
+```
+
+```{r}
+p1+geom_point()+geom_smooth(method=lm, se=FALSE)
+```
+
+```{r}
+p1+geom_line()+geom_point()
+```
