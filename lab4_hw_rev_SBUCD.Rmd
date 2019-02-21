@@ -1,6 +1,8 @@
 ---
 title: "lab4_hw_rev_SBUCD"
-output: html_document
+output: 
+  html_document: 
+    keep_md: yes
 ---
 
 ```{r setup, include=FALSE}
@@ -14,7 +16,7 @@ library(tidyverse)
 
 # Load mammal data
 ```{r}
-life_history <- readr::read_csv("/Users/sophieborison/Desktop/class_files-master/mammal_lifehistories_v2.csv")
+life_history <- readr::read_csv("/Users/sophieborison/Desktop/class_files-master/data/mammal_lifehistories_v2.csv")
 ```
 
 # Rename some of the variables
@@ -35,7 +37,7 @@ life_history <-
 
 ### Install `skimr`
 ```{r}
-install.packages("skimr")
+# install.packages("skimr")
 ```
 
 ### Load `skimr`

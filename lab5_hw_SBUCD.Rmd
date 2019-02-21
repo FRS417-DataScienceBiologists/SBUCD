@@ -1,0 +1,107 @@
+---
+title: "lab5_hw_SBUCD"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Load the tidyverse
+```{r message=FALSE, warning=FALSE}
+library(tidyverse)
+library(skimr)
+```
+
+## Mammals Life History
+Let's revisit the mammal life history data to practice our `ggplot` skills. Some of the tidy steps will be a repeat from the homework, but it is good practice. The [data](http://esapubs.org/archive/ecol/E084/093/) are from: *S. K. Morgan Ernest. 2003. Life history characteristics of placental non-volant mammals. Ecology 84:3402.*
+
+# 1. Load the data.
+```{r}
+lifehistories <- readr::read_csv("/Users/sophieborison/Desktop/class_files-master/data/mammal_lifehistories_v2.csv")
+```
+
+# 2. Use your preferred function to have a look. Do you notice any problems?
+
+### There are many NAs.
+```{r}
+skimr::skim(lifehistories)
+```
+
+# 3. There are NA's. How are you going to deal with them?
+
+### Repalace -999 with "NA"
+```{r}
+lifehistories_NA <- 
+  lifehistories %>% 
+  na_if(-999.00)
+lifehistories_NA
+```
+
+# 4. Where are the NA's? This is important to keep in mind as you build plots.
+
+### Most of the NA's are in wean mass, max. life, and litters/year.
+```{r}
+lifehistories_NA %>%
+  purrr::map_df(~ sum(is.na(.))) %>%
+  tidyr::gather(variables, num_nas) %>% 
+  arrange(desc(num_nas))
+```
+
+# 5. Some of the variable names will be problematic. Let's rename them here as a final tidy step.
+
+```{r}
+lifehistories_NA %>%
+  mutate(
+          genus        = Genus,
+          wean_mass    = `wean mass`,
+          max_life     = `max. life`,
+          litter_size  = `litter size`,
+          litters_yr   = `litters/year`
+          )
+```
+
+
+
+##`ggplot()`
+For the questions below, try to use the aesthetics you have learned to make visually appealing and informative plots. Make sure to include labels for the axes and titles.
+```{r}
+options(scipen=999) #cancels the use of scientific notation for the session
+```
+
+# 6. What is the relationship between newborn body mass and gestation? Make a scatterplot that shows this relationship. 
+
+```{r}
+ggplot(data=lifehistories_NA, mapping=aes(x=newborn, y=gestation)) +
+  geom_point()
+  #geom_smooth(method=lm, se=FALSE)
+```
+
+# 7. You should notice that because of the outliers in newborn mass, we need to make some changes. We didn't talk about this in lab, but you can use `scale_x_log10()` as a layer to correct for this issue. This will log transform the y-axis values.
+
+```{r}
+ggplot(data=lifehistories_NA, mapping=aes(x=newborn, y=gestation)) +
+  geom_point() +
+  scale_x_log10()
+```
+
+# 8. Now that you have the basic plot, color the points by taxonomic order.
+
+```{r}
+ggplot(data=lifehistories_NA, mapping=aes(x=newborn, y=gestation)) +
+  geom_point(aes(colour=order)) +
+  scale_x_log10()
+```
+
+# 9. Lastly, make the size of the points proportional to body mass.
+
+```{r}
+ggplot(data=lifehistories_NA, mapping=aes(x=newborn, y=gestation)) +
+  geom_point(aes(colour=order, size=mass)) +
+  scale_x_log10()
+```
+
+# 10. Make a plot that shows the range of lifespan by order.
+
+### n/a
+
