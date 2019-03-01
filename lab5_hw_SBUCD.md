@@ -55,14 +55,14 @@ skimr::skim(lifehistories)
 ##  n obs: 1440 
 ##  n variables: 13 
 ## 
-## ── Variable type:character ──────────────────────────────────────────────────────────
+## ── Variable type:character ─────────────────────────────────────────────────────────────────
 ##  variable missing complete    n min max empty n_unique
 ##    family       0     1440 1440   6  15     0       96
 ##     Genus       0     1440 1440   3  16     0      618
 ##     order       0     1440 1440   7  14     0       17
 ##   species       0     1440 1440   3  17     0     1191
 ## 
-## ── Variable type:numeric ────────────────────────────────────────────────────────────
+## ── Variable type:numeric ───────────────────────────────────────────────────────────────────
 ##      variable missing complete    n      mean         sd   p0  p25     p50
 ##           AFR       0     1440 1440   -408.12     504.97 -999 -999    2.5 
 ##     gestation       0     1440 1440   -287.25     455.36 -999 -999    1.05
@@ -148,36 +148,34 @@ lifehistories_NA %>%
 
 
 ```r
-lifehistories_NA %>%
-  mutate(
+lifehistories_renamed <- lifehistories_NA %>%
+    dplyr::rename(
           genus        = Genus,
           wean_mass    = `wean mass`,
           max_life     = `max. life`,
           litter_size  = `litter size`,
           litters_yr   = `litters/year`
           )
+lifehistories_renamed
 ```
 
 ```
-## # A tibble: 1,440 x 18
-##    order family Genus species   mass gestation newborn weaning `wean mass`
-##    <chr> <chr>  <chr> <chr>    <dbl>     <dbl>   <dbl>   <dbl>       <dbl>
-##  1 Arti… Antil… Anti… americ… 4.54e4      8.13   3246.    3           8900
-##  2 Arti… Bovid… Addax nasoma… 1.82e5      9.39   5480     6.5           NA
-##  3 Arti… Bovid… Aepy… melamp… 4.15e4      6.35   5093     5.63       15900
-##  4 Arti… Bovid… Alce… busela… 1.50e5      7.9   10167.    6.5           NA
-##  5 Arti… Bovid… Ammo… clarkei 2.85e4      6.8      NA    NA             NA
-##  6 Arti… Bovid… Ammo… lervia  5.55e4      5.08   3810     4             NA
-##  7 Arti… Bovid… Anti… marsup… 3.00e4      5.72   3910     4.04          NA
-##  8 Arti… Bovid… Anti… cervic… 3.75e4      5.5    3846     2.13          NA
-##  9 Arti… Bovid… Bison bison   4.98e5      8.93  20000    10.7       157500
-## 10 Arti… Bovid… Bison bonasus 5.00e5      9.14  23000.    6.6           NA
-## # … with 1,430 more rows, and 9 more variables: AFR <dbl>, `max.
-## #   life` <dbl>, `litter size` <dbl>, `litters/year` <dbl>, genus <chr>,
-## #   wean_mass <dbl>, max_life <dbl>, litter_size <dbl>, litters_yr <dbl>
+## # A tibble: 1,440 x 13
+##    order family genus species   mass gestation newborn weaning wean_mass
+##    <chr> <chr>  <chr> <chr>    <dbl>     <dbl>   <dbl>   <dbl>     <dbl>
+##  1 Arti… Antil… Anti… americ… 4.54e4      8.13   3246.    3         8900
+##  2 Arti… Bovid… Addax nasoma… 1.82e5      9.39   5480     6.5         NA
+##  3 Arti… Bovid… Aepy… melamp… 4.15e4      6.35   5093     5.63     15900
+##  4 Arti… Bovid… Alce… busela… 1.50e5      7.9   10167.    6.5         NA
+##  5 Arti… Bovid… Ammo… clarkei 2.85e4      6.8      NA    NA           NA
+##  6 Arti… Bovid… Ammo… lervia  5.55e4      5.08   3810     4           NA
+##  7 Arti… Bovid… Anti… marsup… 3.00e4      5.72   3910     4.04        NA
+##  8 Arti… Bovid… Anti… cervic… 3.75e4      5.5    3846     2.13        NA
+##  9 Arti… Bovid… Bison bison   4.98e5      8.93  20000    10.7     157500
+## 10 Arti… Bovid… Bison bonasus 5.00e5      9.14  23000.    6.6         NA
+## # … with 1,430 more rows, and 4 more variables: AFR <dbl>, max_life <dbl>,
+## #   litter_size <dbl>, litters_yr <dbl>
 ```
-
-
 
 ##`ggplot()`
 For the questions below, try to use the aesthetics you have learned to make visually appealing and informative plots. Make sure to include labels for the axes and titles.
@@ -190,7 +188,7 @@ options(scipen=999) #cancels the use of scientific notation for the session
 
 
 ```r
-ggplot(data=lifehistories_NA, mapping=aes(x=newborn, y=gestation)) +
+ggplot(data=lifehistories_renamed, mapping=aes(x=newborn, y=gestation)) +
   geom_point()
 ```
 
@@ -208,7 +206,7 @@ ggplot(data=lifehistories_NA, mapping=aes(x=newborn, y=gestation)) +
 
 
 ```r
-ggplot(data=lifehistories_NA, mapping=aes(x=newborn, y=gestation)) +
+ggplot(data=lifehistories_renamed, mapping=aes(x=newborn, y=gestation)) +
   geom_point() +
   scale_x_log10()
 ```
@@ -223,7 +221,7 @@ ggplot(data=lifehistories_NA, mapping=aes(x=newborn, y=gestation)) +
 
 
 ```r
-ggplot(data=lifehistories_NA, mapping=aes(x=newborn, y=gestation)) +
+ggplot(data=lifehistories_renamed, mapping=aes(x=newborn, y=gestation)) +
   geom_point(aes(colour=order)) +
   scale_x_log10()
 ```
@@ -238,7 +236,7 @@ ggplot(data=lifehistories_NA, mapping=aes(x=newborn, y=gestation)) +
 
 
 ```r
-ggplot(data=lifehistories_NA, mapping=aes(x=newborn, y=gestation)) +
+ggplot(data=lifehistories_renamed, mapping=aes(x=newborn, y=gestation)) +
   geom_point(aes(colour=order, size=mass)) +
   scale_x_log10()
 ```
@@ -251,5 +249,22 @@ ggplot(data=lifehistories_NA, mapping=aes(x=newborn, y=gestation)) +
 
 # 10. Make a plot that shows the range of lifespan by order.
 
-### n/a
+
+```r
+lifehistories_renamed %>%
+  ggplot(aes(x=order, y=max_life, fill=order))+
+  geom_boxplot() +
+  scale_y_log10() +
+  labs(title = "Lifespan by Order",
+       x = "Order",
+       y = "Lifespan") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+
+```
+## Warning: Removed 841 rows containing non-finite values (stat_boxplot).
+```
+
+![](lab5_hw_SBUCD_files/figure-html/unnamed-chunk-12-1.png)<!-- -->
+
 
