@@ -14,7 +14,7 @@ library(tidyverse)
 ```
 
 ```
-## ── Attaching packages ──────────────────────────────────────────── tidyverse 1.2.1 ──
+## ── Attaching packages ────────────────────────────────────────────────────────── tidyverse 1.2.1 ──
 ```
 
 ```
@@ -25,7 +25,7 @@ library(tidyverse)
 ```
 
 ```
-## ── Conflicts ─────────────────────────────────────────────── tidyverse_conflicts() ──
+## ── Conflicts ───────────────────────────────────────────────────────────── tidyverse_conflicts() ──
 ## ✖ dplyr::filter() masks stats::filter()
 ## ✖ dplyr::lag()    masks stats::lag()
 ```
@@ -33,7 +33,7 @@ library(tidyverse)
 # Load mammal data
 
 ```r
-life_history <- readr::read_csv("/Users/sophieborison/Desktop/class_files-master/mammal_lifehistories_v2.csv")
+life_history <- readr::read_csv("/Users/sophieborison/Desktop/class_files-master/data/mammal_lifehistories_v2.csv")
 ```
 
 ```
@@ -96,14 +96,14 @@ life_history %>%
 ##  n obs: 1440 
 ##  n variables: 13 
 ## 
-## ── Variable type:character ──────────────────────────────────────────────────────────
+## ── Variable type:character ────────────────────────────────────────────────────────────────────────
 ##  variable missing complete    n min max empty n_unique
 ##    family       0     1440 1440   6  15     0       96
 ##     genus       0     1440 1440   3  16     0      618
 ##     order       0     1440 1440   7  14     0       17
 ##   species       0     1440 1440   3  17     0     1191
 ## 
-## ── Variable type:numeric ────────────────────────────────────────────────────────────
+## ── Variable type:numeric ──────────────────────────────────────────────────────────────────────────
 ##     variable missing complete    n      mean         sd   p0  p25     p50
 ##          AFR       0     1440 1440   -408.12     504.97 -999 -999    2.5 
 ##    gestation       0     1440 1440   -287.25     455.36 -999 -999    1.05

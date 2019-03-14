@@ -1,6 +1,8 @@
 ---
 title: "lab3_hw_SBUCD"
-output: html_document
+output: 
+  html_document: 
+    keep_md: yes
 ---
 
 ```{r setup, include=FALSE}
@@ -13,7 +15,7 @@ library(tidyverse)
 ```
 
 ```{r}
-fisheries <- readr::read_csv(file = "/Users/sophieborison/Desktop/class_files-master/FAO_1950to2012_111914.csv")
+fisheries <- readr::read_csv(file = "/Users/sophieborison/Desktop/class_files-master/data/FAO_1950to2012_111914.csv")
 ```
 
 # 1
