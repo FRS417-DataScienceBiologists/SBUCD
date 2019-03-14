@@ -1,0 +1,370 @@
+---
+title: "SophieDevan_Project_3"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+library(skimr)
+library(paletteer)
+```
+
+```{r}
+colors<-
+  paletteer::palettes_d_names
+```
+
+```{r}
+my_palette <-
+  paletteer_d(package="ggsci", palette="default_igv")
+```
+
+```{r}
+parks <- 
+  readr::read_csv("/Users/sophieborison/Desktop/National_Parks_Statistics.csv", skip=3, na=c("NA", "N/A", "#N/A"))
+```
+
+```{r}
+names(parks)
+```
+
+```{r}
+glimpse(parks)
+```
+
+```{r}
+parks %>%
+  purrr::map_df(~ sum(is.na(.))) %>%
+  tidyr::gather(variables, num_nas) %>% 
+  arrange(desc(num_nas))
+```
+
+```{r}
+parks_renamed <- parks %>%
+  dplyr::rename(
+            park_name = ParkName,
+            unit_code = UnitCode,                     
+            park_type = ParkType,
+               region = Region,                         
+                state = State,
+                year = Year,                           
+                month = Month,   
+            rec_visits = RecreationVisits,
+        non_rec_vists = NonRecreationVisits,
+            rec_hours = RecreationHours,
+         non_rec_hours = NonRecreationHours,
+          conc_lodging = ConcessionerLodging,            
+          conc_camping = ConcessionerCamping,
+          tent_campers = TentCampers,
+            rv_campers = RVCampers,
+            backcountry = Backcountry,               
+non_rec_overnight_stays = NonRecreationOvernightStays,
+  misc_overnight_stays = MiscellaneousOvernightStays,
+      park_name_total = ParkNameTotal,
+      unit_code_total = UnitCodeTotal,    
+      park_type_total = ParkTypeTotal,            
+        regional_total = RegionTotal,    
+          state_total = StateTotal,
+            year_total = YearTotal,
+      rec_visits_total = RecreationVisitsTotal,
+  non_rec_visits_total = NonRecreationVisitsTotal,
+      rec_hours_total = RecreationHoursTotal,
+  non_rec_hours_total = NonRecreationHoursTotal,   
+    conc_lodging_total = ConcessionerLodgingTotal,
+    conc_camping_total = ConcessionerCampingTotal,
+    tent_campers_total = TentCampersTotal,
+      rv_campers_total = RVCampersTotal,      
+      backgrounty_total = BackcountryTotal,                
+      non_rec_overnight = NonRecreationOvernightStaysTotal,
+misc_overnight_stays_total = MiscellaneousOvernightStaysTotal
+          )
+```
+
+# want to summarize number of rec visits per park per year
+
+### I dont want total number of entries, but total of rows for that park
+```{r}
+parks_renamed %>%
+  group_by(park_name) %>%
+  summarize(total = n())
+```
+
+### GGNRA in 1987 had the highest rec_visits 
+### NRAs seem to be the most popular park type, at least recreationally
+###### need to make year categorical, not coninuous
+```{r}
+parks_renamed %>%
+  filter(park_type=="National Park") %>%
+  group_by(year, park_name) %>%
+   summarize(mean_rec_visits = mean(rec_visits), 
+              min_rec_visits = min(rec_visits),
+              max_rec_visits = max(rec_visits),
+              total = n()) %>%
+  arrange(desc(mean_rec_visits)) %>%
+  ggplot(aes(x=reorder(park_name, mean_rec_visits), y=mean_rec_visits, group=year, fill=year)) +
+  geom_bar(stat="identity") + # width = 0.8, position = "dodge"
+  labs(title = "Rec Visits Per Park Per Year",
+       x = "Park",
+       y = "Rec Visits") +
+  theme(legend.position = "none", axis.text.x = element_text(angle = 65, hjust = 1),
+       plot.title=element_text(size=16, face="bold", hjust=0.5),
+       axis.text = element_text(size=5),
+        axis.title = element_text(size=12))
+```
+
+```{r}
+parks_renamed %>%
+  filter(park_type=="National Park") %>%
+  group_by(year, park_name) %>%
+   summarize(mean_rec_visits = mean(rec_visits), 
+              min_rec_visits = min(rec_visits),
+              max_rec_visits = max(rec_visits),
+              total = n()) %>%
+  arrange(desc(mean_rec_visits)) %>%
+  ggplot(aes(x=reorder(park_name, mean_rec_visits), y=mean_rec_visits, group=year, fill=year)) +
+  geom_bar(stat="identity") + # width = 0.8, position = "dodge"
+  labs(title = "Rec Visits Per Park Per Year",
+       x = "Park",
+       y = "Rec Visits") +
+  theme(legend.position = "none", axis.text.x = element_text(angle = 65, hjust = 1),
+       plot.title=element_text(size=16, face="bold", hjust=0.5),
+       axis.text = element_text(size=5),
+        axis.title = element_text(size=12)) +
+  scale_fill_paletteer_c("ggthemes", "Red-Green-Gold Diverging")
+```
+
+###### used as.factor
+```{r}
+parks_renamed %>%
+  filter(park_type=="National Park") %>%
+  group_by(year, park_name) %>%
+   summarize(mean_rec_visits = mean(rec_visits), 
+              min_rec_visits = min(rec_visits),
+              max_rec_visits = max(rec_visits),
+              total = n()) %>%
+  arrange(desc(mean_rec_visits)) %>%
+  ggplot(aes(x=reorder(park_name, mean_rec_visits), y=mean_rec_visits, group=year, fill=as.factor(year))) +
+  geom_bar(stat="identity") + # width = 0.8, position = "dodge"
+  labs(title = "Rec Visits Per Park Per Year",
+       x = "Park",
+       y = "Rec Visits") +
+  theme(legend.position = "none", axis.text.x = element_text(angle = 65, hjust = 1),
+       plot.title=element_text(size=16, face="bold", hjust=0.5),
+       axis.text = element_text(size=5),
+      axis.title = element_text(size=12))
+```
+
+```{r}
+parks_renamed %>%
+  filter(park_type=="National Park") %>%
+  group_by(year, park_name) %>%
+   summarize(mean_rec_visits = mean(rec_visits), 
+              min_rec_visits = min(rec_visits),
+              max_rec_visits = max(rec_visits),
+              total = n()) %>%
+  arrange(desc(mean_rec_visits)) %>%
+  ggplot(aes(x=reorder(park_name, mean_rec_visits), y=mean_rec_visits, group=year, fill=as.factor(year))) +
+  geom_bar(stat="identity") + # width = 0.8, position = "dodge"
+  labs(title = "Rec Visits Per Park Per Year",
+       x = "Park",
+       y = "Rec Visits") +
+  theme(legend.position = "none", axis.text.x = element_text(angle = 65, hjust = 1),
+       plot.title=element_text(size=16, face="bold", hjust=0.5),
+       axis.text = element_text(size=5),
+      axis.title = element_text(size=12)) +
+  scale_fill_manual(values=my_palette)
+```
+
+### rec visits per year
+### rec visits have been slowly going up going up over time
+### peaked in late 80s then again in 2010 and onwards
+##### do we want to color line graphs
+```{r}
+parks_renamed %>%
+  group_by(year) %>%
+   summarize(mean_rec_visits = mean(rec_visits), 
+              min_rec_visits = min(rec_visits),
+              max_rec_visits = max(rec_visits),
+              total = n()) %>%
+  arrange(desc(mean_rec_visits)) %>%
+  ggplot(aes(x=year, y=mean_rec_visits)) +
+  geom_point() +
+  geom_line() +
+  labs(title = "Rec Visits Per Year",
+       x = "Year",
+       y = "Mean Rec Visits") +
+  theme(axis.text.x = element_text(hjust = 1),
+       plot.title=element_text(size=16, face="bold", hjust=0.5),
+        axis.text = element_text(size=10),
+        axis.title = element_text(size=12))
+```
+
+# want to look at what park type is most popular
+
+```{r}
+parks_renamed %>%
+  group_by(park_type) %>%
+   summarize(mean_rec_visits = mean(rec_visits), 
+              min_rec_visits = min(rec_visits),
+              max_rec_visits = max(rec_visits),
+              total = n()) %>%
+  arrange(desc(mean_rec_visits)) %>%
+  ggplot(aes(x= reorder(park_type, mean_rec_visits), y=mean_rec_visits, fill=park_type)) +
+  geom_bar(stat="identity", alpha = 0.7, color= "white") +
+  labs(title = "Popularity of Park Type",
+       x = "Park Type",
+       y = "Mean Rec Visits") +
+  theme(legend.position = "none", axis.text.x = element_text(angle = 65, hjust = 1),
+       plot.title=element_text(size=16, face="bold", hjust=0.5),
+        axis.text = element_text(size=10),
+        axis.title = element_text(size=12)) +
+  scale_fill_manual(values=my_palette)
+```
+
+# want to look at popularity of biomes overtime
+
+```{r}
+parks_renamed %>%
+  group_by(region) %>%
+   summarize(mean_rec_visits = mean(rec_visits), 
+              min_rec_visits = min(rec_visits),
+              max_rec_visits = max(rec_visits),
+              total = n()) %>%
+  arrange(desc(mean_rec_visits))
+```
+
+```{r}
+parks_renamed %>%
+  select(region, year, rec_visits) %>%
+  group_by(year, region) %>%
+  summarize(mean_rec_visits = mean(rec_visits)) %>%
+  ggplot(aes(x=year, y=mean_rec_visits, group=region, color=region)) +
+  geom_line() +
+    labs(title = "Visits Over Time",
+       x = "Year",
+       y = "Mean Rec Visits") +
+  theme(axis.text.x = element_text(hjust = 1),
+       plot.title=element_text(size=16, face="bold", hjust=0.5),
+        axis.text = element_text(size=10),
+        axis.title = element_text(size=12)) +
+  scale_colour_manual(values=my_palette)
+```
+
+```{r}
+parks_renamed %>%
+  select(region, year, rec_visits) %>%
+  filter(region != "National Capital") %>%
+  group_by(year, region) %>%
+  summarize(mean_rec_visits = mean(rec_visits)) %>%
+  ggplot(aes(x=year, y=mean_rec_visits, group=region, color=region)) +
+  geom_line() +
+    labs(title = "Visits Over Time",
+       x = "Year",
+       y = "Mean Rec Visits") +
+  theme(legend.position = "none", axis.text.x = element_text(hjust = 1),
+       plot.title=element_text(size=16, face="bold", hjust=0.5),
+        axis.text = element_text(size=6),
+        axis.title = element_text(size=12)) +
+  facet_wrap(~region) +
+  scale_colour_manual(values=my_palette)
+```
+
+# want to look at best seasons to go
+
+### I want the mean of the rec visits per month across the years
+
+### July is the most popular month, January is least popular
+###### need to make year categorical, not coninuous
+```{r}
+parks_renamed %>%
+  select(park_name, month, year, rec_visits) %>%
+  filter(year > 2000) %>%
+  group_by(month, year) %>%
+  summarize(mean_rec_visits = mean(rec_visits)) %>%
+  ggplot(aes(x=month, y=mean_rec_visits, group=month, fill=month)) +
+  geom_boxplot() +
+  labs(title = "Visits by Month",
+       x = "Month",
+       y = "Mean Rec Visits") +
+  theme(axis.text.x = element_text(hjust = 1),
+       plot.title=element_text(size=16, face="bold", hjust=0.5),
+        axis.text = element_text(size=10),
+        axis.title = element_text(size=12))
+```
+
+##### do I make month as factor or not?
+```{r}
+parks_renamed %>%
+  select(park_name, month, year, rec_visits) %>%
+  filter(year > 2000) %>%
+  group_by(month, year) %>%
+  summarize(mean_rec_visits = mean(rec_visits)) %>%
+  ggplot(aes(x=month, y=mean_rec_visits, group=month, fill=as.factor(month))) +
+  geom_boxplot() +
+  labs(title = "Visits by Month",
+       x = "Month",
+       y = "Mean Rec Visits",
+       fill="Month") +
+  theme(axis.text.x = element_text(hjust = 1),
+        plot.title=element_text(size=16, face="bold", hjust=0.5),
+        axis.text = element_text(size=10),
+        axis.title = element_text(size=12)) +
+   scale_fill_manual(values=my_palette)
+```
+
+# This doesn't make sense
+##### Is there anything we could do density/histogram for?
+```{r}
+parks_renamed %>% 
+  select(park_name, month, year, rec_visits) %>%
+  filter(year > 2000) %>%
+  group_by(month, year) %>%
+  summarize(mean_rec_visits = mean(rec_visits)) %>%
+  ggplot(aes(x=month)) +
+  geom_histogram(aes(y = ..density..), binwidth = .4, alpha=0.8)+
+  geom_density()
+```
+
+
+# I want to look at Joshua Tree in particular
+
+```{r}
+parks_renamed %>%
+  select(park_name, year, rec_visits) %>%
+  filter(park_name=="Joshua Tree NP") %>%
+  group_by(year) %>%
+  summarize(mean_rec_visits=mean(rec_visits))%>%
+  ggplot(aes(x=year, y=mean_rec_visits)) +
+  geom_point() +
+  geom_line() +
+  labs(title = "Visits to Joshua Tree NP Overtime",
+       x = "Year",
+       y = "Mean Rec Visits") +
+  theme(plot.title=element_text(size=16, face="bold", hjust=0.5),
+        axis.text = element_text(size=10),
+        axis.title = element_text(size=12))
+```
+
+
+# What about Glacier National Park?
+
+```{r}
+parks_renamed %>%
+  select(park_name, year, rec_visits) %>%
+  filter(park_name=="Glacier NP") %>%
+  group_by(year) %>%
+  summarize(mean_rec_visits=mean(rec_visits))%>%
+  ggplot(aes(x=year, y=mean_rec_visits)) +
+  geom_point() +
+  geom_line() +
+  labs(title = "Visits to Glacier NP Overtime",
+       x = "Year",
+       y = "Mean Rec Visits") +
+  theme(plot.title=element_text(size=16, face="bold", hjust=0.5),
+        axis.text = element_text(size=10),
+        axis.title = element_text(size=12))
+```

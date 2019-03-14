@@ -44,7 +44,7 @@ ggplot(data=iris, mapping=aes(x=Sepal.Length, y=Sepal.Width))+
 
 ### Load the data
 ```{r}
-homerange <- readr::read_csv("/Users/sophieborison/Desktop/class_files-master/Tamburelloetal_HomeRangeDatabase.csv")
+homerange <- readr::read_csv("/Users/sophieborison/Desktop/class_files-master/Data/Tamburelloetal_HomeRangeDatabase.csv")
 ```
 
 ```{r}

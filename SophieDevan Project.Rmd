@@ -13,6 +13,35 @@ library(skimr)
 ```
 
 ```{r}
-olympics <- readr::read_csv("/Users/sophieborison/Desktop/athlete_events.csv")
+brush_raw <- 
+  readr::read_csv("/Users/sophieborison/Desktop/Data_for_Sophie.csv", skip=3, na=c("NA", "N/A", "#N/A"))
 ```
+
+```{r}
+names(brush_raw)
+```
+
+```{r}
+glimpse(brush_raw)
+```
+
+```{r}
+brush_raw %>%
+  purrr::map_df(~ sum(is.na(.))) %>%
+  tidyr::gather(variables, num_nas) %>% 
+  arrange(desc(num_nas))
+```
+
+# Trying to change the contents inside of columns
+
+```{r}
+#brush_raw %>%
+#  mutate_at(vars("old_browse"),funs(as.logical))
+#  to_logical(x, language = "en", custom_true = character(), custom_false = character())
+```
+
+# ```{r}
+# brush_rename <- 
+#   rename()
+# ```
 

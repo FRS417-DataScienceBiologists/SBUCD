@@ -1,0 +1,132 @@
+---
+title: "lab5_2_SBUCD"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+```
+
+```{r}
+homerange <-
+  readr::read_csv("/Users/sophieborison/Desktop/class_files-master/data/Tamburelloetal_HomeRangeDatabase.csv", na = c("", " ", "NA", "#N/A", "-999"))
+```
+
+```{r}
+glimpse(homerange)
+```
+
+#Box Plots
+### Box Plots are for range of values
+```{r}
+homerange %>% 
+  ggplot(aes(x=class, y=log10.mass))+
+  geom_boxplot()
+```
+
+# Practice
+
+### 1. There are more herbivores than carnivores in the homerange data, but how do their masses compare? Make a boxplot that compares their masses. Use `log10.mass`.
+
+```{r}
+homerange %>%
+  ggplot(aes(x=trophic.guild, y=log10.mass))+
+  geom_boxplot()
+```
+### identity is for count, box plot is for range, so don't use identity
+
+### 2. Practice your dplyr skills and filter out carnivorous mammals. 
+
+### 3. Now use a boxplot to visualize the range of body mass by family of carnivore.
+
+# Other Aesthetics
+
+### Title is another layer, not piping anything
+### Labs is for labels customized for your plot
+```{r}
+ggplot(data=homerange, mapping=aes(x=log10.mass, y=log10.hra)) +
+  geom_point()+
+         labs(title="Mass vs. Homerange",
+              x = "Mass (log10)",
+              y = "Homerange (log10)")
+```
+
+### Make type bold
+### Change type size
+```{r}
+ggplot(data=homerange, mapping=aes(x=log10.mass, y=log10.hra)) +
+  geom_point()+
+  labs(title="Mass vs. Homerange",
+              x = "Mass (log10)",
+              y = "Homerange (log10)")+
+  theme(plot.title=element_text(size=18, face="bold"),
+        axis.text=element_text(size=12),
+        axis.title=element_text(size=12))
+```
+
+### rel decides for you the size of titles relatively
+```{r}
+ggplot(data=homerange, mapping=aes(x=log10.mass, y=log10.hra)) +
+  geom_point()+
+  labs(title="Mass vs. Homerange",
+              x = "Mass (log10)",
+              y = "Homerange (log10)")+
+  theme(plot.title = element_text(size = rel(1.5)))
+```
+
+# Practice
+
+### 1. Make a barplot that shows counts of ectotherms and endotherms. Label the axes, provide a title, and fill by thermoregulation type.
+
+```{r}
+homerange %>%
+  ggplot(aes(x=locomotion)) +
+  geom_bar() +
+  labs(title = "Locomotion vs. Individuals",
+       x = "Locomotion Type",
+       y = "Individuals") +
+  theme(plot.title = element_text(size=14, face = "bold", hjust=0.5),
+        axis.text = element_text(size=10),
+        axis.title = element_text(size=12))
+```
+
+### 2. Make a boxplot that compares thermoregulation type by log10.mass. Group and fill by class. Label the axes and provide a title.
+
+# Color
+
+### Color points a certain color is different than coloring by a certain variable
+
+```{r}
+homerange %>%
+  ggplot(aes(x=log10.mass, y=log10.hra))+
+  geom_point(color.by(log10.mass))
+```
+
+```{r}
+homerange %>%
+  ggplot(aes(x=log10.mass, y=log10.hra))+
+  geom_point(color="hotpink")
+```
+
+# Size
+
+### Adjust the size of points
+
+# Fill
+```{r}
+homerange %>%
+  
+```
+
+# Group
+```{r}
+homerange %>%
+  ggplot(aes(x=class, y=log10.mass, group=taxon, fill=taxon))+
+  geom_boxplot()
+```
+
+

@@ -1,6 +1,8 @@
 ---
 title: "lab5_hw_SBUCD"
-output: html_document
+output: 
+  html_document: 
+    keep_md: yes
 ---
 
 ```{r setup, include=FALSE}
@@ -51,17 +53,16 @@ lifehistories_NA %>%
 # 5. Some of the variable names will be problematic. Let's rename them here as a final tidy step.
 
 ```{r}
-lifehistories_NA %>%
-  mutate(
+lifehistories_renamed <- lifehistories_NA %>%
+    dplyr::rename(
           genus        = Genus,
           wean_mass    = `wean mass`,
           max_life     = `max. life`,
           litter_size  = `litter size`,
           litters_yr   = `litters/year`
           )
+lifehistories_renamed
 ```
-
-
 
 ##`ggplot()`
 For the questions below, try to use the aesthetics you have learned to make visually appealing and informative plots. Make sure to include labels for the axes and titles.
@@ -72,7 +73,7 @@ options(scipen=999) #cancels the use of scientific notation for the session
 # 6. What is the relationship between newborn body mass and gestation? Make a scatterplot that shows this relationship. 
 
 ```{r}
-ggplot(data=lifehistories_NA, mapping=aes(x=newborn, y=gestation)) +
+ggplot(data=lifehistories_renamed, mapping=aes(x=newborn, y=gestation)) +
   geom_point()
   #geom_smooth(method=lm, se=FALSE)
 ```
@@ -80,7 +81,7 @@ ggplot(data=lifehistories_NA, mapping=aes(x=newborn, y=gestation)) +
 # 7. You should notice that because of the outliers in newborn mass, we need to make some changes. We didn't talk about this in lab, but you can use `scale_x_log10()` as a layer to correct for this issue. This will log transform the y-axis values.
 
 ```{r}
-ggplot(data=lifehistories_NA, mapping=aes(x=newborn, y=gestation)) +
+ggplot(data=lifehistories_renamed, mapping=aes(x=newborn, y=gestation)) +
   geom_point() +
   scale_x_log10()
 ```
@@ -88,7 +89,7 @@ ggplot(data=lifehistories_NA, mapping=aes(x=newborn, y=gestation)) +
 # 8. Now that you have the basic plot, color the points by taxonomic order.
 
 ```{r}
-ggplot(data=lifehistories_NA, mapping=aes(x=newborn, y=gestation)) +
+ggplot(data=lifehistories_renamed, mapping=aes(x=newborn, y=gestation)) +
   geom_point(aes(colour=order)) +
   scale_x_log10()
 ```
@@ -96,12 +97,22 @@ ggplot(data=lifehistories_NA, mapping=aes(x=newborn, y=gestation)) +
 # 9. Lastly, make the size of the points proportional to body mass.
 
 ```{r}
-ggplot(data=lifehistories_NA, mapping=aes(x=newborn, y=gestation)) +
+ggplot(data=lifehistories_renamed, mapping=aes(x=newborn, y=gestation)) +
   geom_point(aes(colour=order, size=mass)) +
   scale_x_log10()
 ```
 
 # 10. Make a plot that shows the range of lifespan by order.
 
-### n/a
+```{r}
+lifehistories_renamed %>%
+  ggplot(aes(x=order, y=max_life, fill=order))+
+  geom_boxplot() +
+  scale_y_log10() +
+  labs(title = "Lifespan by Order",
+       x = "Order",
+       y = "Lifespan") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+
 

@@ -1,0 +1,131 @@
+---
+title: "Midterm Exam"
+date: "Winter 2019"
+output:
+  html_document:
+    keep_md: yes
+    theme: spacelab
+    toc_float: no
+  pdf_document:
+    toc: yes
+---
+
+## Instructions
+This exam is designed to show me what you have learned and where there are problems. You may use your notes and anything from the `class_files` folder, but please no internet searches. You have 35 minutes to complete as many of these exercises as possible on your own, and 10 minutes to work with a partner.  
+
+At the end of the exam, upload the complete .Rmd file to your GitHub repository.  
+
+1. Load the tidyverse.
+
+```{r}
+library(tidyverse)
+```
+
+2. For these questions, we will use data about California colleges. Load the `ca_college_data.csv` as a new object called `colleges`.
+
+```{r}
+college <- 
+  readr::read_csv("/Users/sophieborison/Desktop/class_files-master/data/ca_college_data.csv", na = c("", " ", "NA", "#N/A", "-999"))
+```
+
+
+3. Use your preferred function to have a look at the data and get an idea of its structure.
+
+```{r}
+glimpse(college)
+```
+
+4. What are the column names?
+
+```{r}
+names(college)
+```
+
+
+5. Are there any NA's in the data? If so, how many are present and in which variables?
+
+```{r}
+lifehistories_NA %>%
+  purrr::map_df(~ sum(is.na(.))) %>%
+  tidyr::gather(variables, num_nas) %>% 
+  arrange(desc(num_nas))
+```
+
+6. Which cities in California have the highest number of colleges?
+
+```{r}
+college %>%
+  group_by(CITY) %>%
+  summarize(total=n())
+```
+
+7. The column `COSTT4_A` is the annual cost of each institution. Which city has the highest cost?
+
+### Claremont
+```{r}
+college %>%
+  select(CITY, COSTT4_A) %>%
+  arrange(desc(COSTT4_A)) %>%
+  top_n(1)
+```
+
+8. The column `ADM_RATE` is the admissions rate by college and `C150_4_POOLED` is the four-year completion rate. Use a scatterplot to show the relationship between these two variables. What does this mean?
+
+```{r}
+college %>%
+  ggplot(aes(x=ADM_RATE, y=C150_4_POOLED)) +
+  geom_point() +
+  geom_smooth(method=lm, se=FALSE) +
+    labs(title = "Admission vs. Completion",
+       x = "Admission Rate by College",
+       y = "Four Year Completion Rate") +
+  theme(plot.title = element_text(size=14, face = "bold", hjust=0.5),
+        axis.text = element_text(size=10),
+        axis.title = element_text(size=12))
+```
+
+9. The column titled `INSTNM` is the institution name. We are only interested in the University of California colleges. Run the code below and look at the output. Are all of the columns tidy? Why or why not?
+
+### The columns are tidy because each title is a category and not a variable.
+```{r}
+univ_calif <-
+  college %>%
+  filter_all(any_vars(str_detect(.,pattern = "University of California")))
+univ_calif
+```
+
+10. Use `separate()` to separate institution name into two new columns "UNIV" and "CAMPUS".
+
+```{r}
+univ_calif %>%
+  separate(INSTNM, into=c("UNIV", "CAMPUS"), sep="-")
+```
+
+11. As a final step, remove `Hastings College of Law` and `UC San Francisco` and store the final data frame as a new object `univ_calif_final`.
+
+```{r}
+univ_calif_final <-
+  univ_calif %>%
+  mutate(
+    str_replace("Hasting College of Law", '') %>%
+    str_replace("UC San Francisco", '')
+  )
+```
+
+
+12. The column `ADM_RATE` is the admissions rate by campus. Which UC has the lowest and highest admissions rates? Please use a barplot.
+
+```{r}
+univ_calif %>%
+  ggplot(aes(x=ADM_RATE, y=INSTNM)) +
+  geom_bar(stat="identity") +
+  labs(title = "Admission Rate by Campus",
+       x = "Admission Rate",
+       y = "Campus") +
+  theme(plot.title = element_text(size=14, face = "bold", hjust=0.5),
+        axis.text = element_text(size=10),
+        axis.title = element_text(size=12))
+```
+
+
+## Knit Your Output and Post to [GitHub](https://github.com/FRS417-DataScienceBiologists)
